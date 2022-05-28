@@ -1,25 +1,59 @@
+<script setup>
+import { RouterLink, RouterView } from 'vue-router'
+</script>
 <template>
-    <div id="nav">
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-    </div>
-    <div id="page">
+    <div id="nav" @click="$event.stopPropagation()">
+        <div class="menuImg">
+            <img :src="ArrowMenu" id="arrowMenuImg" @click="toggleMenu" class="rotate">
+        </div>
+        <RouterLink to="/" @click="closeMenu" ><img :src="HomeIcon"/>Home</RouterLink>
+        <RouterLink to="/portfolio" @click="closeMenu" ><img :src="Work"/>Portfolio</RouterLink>
+        <RouterLink to="/software" @click="closeMenu" ><img :src="Software"/>Software</RouterLink>
+        <RouterLink to="/about" @click="closeMenu" ><img :src="Info"/>About</RouterLink>
         
     </div>
-
-    <!-- <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-    </nav> -->
-    
     <RouterView />
 </template>
 
 
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-</script>
 
+
+<script>
+import ArrowMenu from './components/Icons/ArrowMenu.svg'
+import HomeIcon from './components/Icons/HomeIcon.svg'
+import Info from './components/Icons/Info.svg'
+import Work from './components/Icons/Work.svg'
+import Software from './components/Icons/Software.svg'
+import $ from 'jquery';
+
+export default {
+    name: 'menu',
+    components: {
+        
+    },
+    data() {
+        return{
+            onlyIcons: true
+        }
+    },
+    mounted(){
+        window.addEventListener('click', function() {
+            this.closeMenu()
+        }.bind(this))
+    },
+    methods: {
+        toggleMenu(){
+            $('#arrowMenuImg').toggleClass('rotate')
+            $('#nav').toggleClass('clicked');
+        },
+        closeMenu(){
+            if($('#nav').hasClass('clicked')){
+                this.toggleMenu();
+            }
+        }
+    }
+};
+</script>
 
 
 <style>
@@ -32,14 +66,57 @@ import { RouterLink, RouterView } from 'vue-router'
 }
 
 #nav{
-    min-width: 60px;
-    width: 60px;
+    width : 60px;
+    min-width : 60px;
     height: 100vh;
-    background-color: black;
+    background-color: #15398B;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    z-index: 1000;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    transition: min-width 1s;
+    gap: 25px;
+    padding-left: 6px;
+    padding-right: 6px;
 }
 
-#page{
-    width: 100%;
-    height: 100vh;
+#nav.clicked{
+    min-width: 225px;
+    align-items: unset;
 }
+
+#nav > a{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: white;
+    text-decoration: none;
+    user-select: none;
+}
+
+.page{
+    width: calc(100% - 60px);
+    height: 100vh;
+    margin-left: auto;
+}
+
+#arrowMenuImg{
+    width: 52px;
+    height: 52px;
+    cursor: pointer;
+}
+
+.menuImg{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.rotate{
+    transform: rotate(180deg);
+}
+
+
 </style>
