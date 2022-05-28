@@ -27,7 +27,7 @@ import Software from './components/Icons/Software.svg'
 import $ from 'jquery';
 
 export default {
-    name: 'menu',
+    name: 'App',
     components: {
         
     },
@@ -58,6 +58,7 @@ export default {
 
 <style>
 @import '@/assets/base.css';
+@import url('https://fonts.googleapis.com/css2?family=Courgette&display=swap');
 #app{
     width: 100%;
     height: 100vh;
@@ -81,6 +82,7 @@ export default {
     gap: 25px;
     padding-left: 6px;
     padding-right: 6px;
+    overflow-x: hidden;
 }
 
 #nav.clicked{
@@ -92,15 +94,24 @@ export default {
     display: flex;
     align-items: center;
     gap: 12px;
+    border-radius: 10px;
     color: white;
     text-decoration: none;
     user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+#nav > a:hover{
+    background-color: #19409b;
 }
 
 .page{
     width: calc(100% - 60px);
     height: 100vh;
     margin-left: auto;
+    padding: 10px;
+    color: black;
+    overflow: hidden;
 }
 
 #arrowMenuImg{
