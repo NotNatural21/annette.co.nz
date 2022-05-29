@@ -1,142 +1,160 @@
 <template>
-    <canvas id="scene"></canvas>
+    <canvas id="canvas"></canvas>
 </template>
 
 <script>
+import WebFont from 'webfontloader';
 export default {
 	name: 'ReactiveParticle',
 	props: {
         text: String
     },
 	mounted(){
-        let canvas = document.querySelector("#scene"),
-            ctx = canvas.getContext("2d"),
-            particles = [],
-            amount = 0,
-            mouse = {x:0,y:0},
-            radius = 1;
-
-        let ww = document.getElementById('scene').clientWidth;
-        let wh = document.getElementById('scene').clientHeight;
-        canvas.width = ww;
-        canvas.height = wh;
-
-        function Particle(x,y){
-            this.x = x;
-            this.y =  0;
-            this.dest = {
-                x : x,
-                y: y
-            };
-            this.r =  2;
-            this.vx = (Math.random() - 0.5) * 20;
-            this.vy = (Math.random() - 0.5) * 20;
-            this.accX = 0;
-            this.accY = 0;
-            this.friction = Math.random() * 0.05 + 0.87;
-
-            this.color = '#19409b';
+        let settings = {
+            startDelay: 30,
+            duration: 180,
+            text: this.text,
+            font: 'Montserrat',
+            textSize: 150,
+            //easeInOutCubic, easeOutCubic, easeOutBack or easeOutBounce
+            easing: "easeInOutCubic"
         }
 
-        Particle.prototype.render = function() {
-            this.accX = (this.dest.x - this.x) / 200;
-            this.accY = (this.dest.y - this.y) / 200;
-            this.vx += this.accX;
-            this.vy += this.accY;
-            this.vx *= this.friction;
-            this.vy *= this.friction;
-
-            this.x += this.vx;
-            this.y +=  this.vy;
-
-            ctx.fillStyle = this.color;
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.r, Math.PI * 2, false);
-            ctx.fill();
-
-            var a = this.x - mouse.x;
-            var b = this.y - mouse.y;
-
-            var distance = Math.sqrt( a*a + b*b );
-            if(distance < (radius * 70)){
-                this.accX = (this.x - mouse.x)/100;
-                this.accY = (this.y - mouse.y)/100;
-                this.vx += this.accX;
-                this.vy += this.accY;
+        class Particle {
+            constructor (destX, destY, x, y, color) {
+                this.destX = destX;
+                this.destY = destY;
+                this.x = x;
+                this.y = y;
+                this.startX = x;
+                this.startY = y;
+                this.color = color;
             }
-        }
-
-        function onMouseMove(e){
-            mouse.x = e.layerX;
-            mouse.y = e.layerY;
-        }
-
-        function onTouchMove(e){
-            if(e.touches.length > 0 ){
-                mouse.x = e.touches[0].layerX;
-                mouse.y = e.touches[0].layerY;
+            
+            // Based on Robert Penner's easing functions
+            easeInOutCubic (t, b, c, d) {
+                if ((t/=d/2) < 1) return c/2*t*t*t + b;
+                return c/2*((t-=2)*t*t + 2) + b;
             }
-        }
-
-        function onTouchEnd(e){
-            mouse.x = -9999;
-            mouse.y = -9999;
-        }
-
-        function initScene(text){
-            let ww = document.getElementById('scene').clientWidth;
-            let wh = document.getElementById('scene').clientHeight;
-            canvas.width = ww;
-            canvas.height = wh;
-
-            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-
-            ctx.font = "bold "+ (Math.max((ww / 12), 60)) + "px sans-serif";
-            ctx.textAlign = "center";
-            ctx.fillText(text , ww/2, wh);
-
-            let data  = ctx.getImageData(0, 0, ww, wh).data;
-            ctx.clearRect(0, 0, ww, wh);
-            ctx.globalCompositeOperation = "screen";
-
-            let numPart = Math.min(Math.max(((ww * wh) / 350), 140), 550)
-            particles = [];
-            for(let i = 0; i < ww; i += Math.round(ww / numPart)){
-                for(let j = 0; j < wh; j += Math.round(ww / numPart)){
-                    if(data[((i + j * ww) * 4) + 3] > 150){
-                        particles.push(new Particle(i,j));
-                    }
+            easeOutCubic (t, b, c, d) {
+                return c*((t=t/d-1)*t*t + 1) + b;
+            }
+            easeOutBack (t, b, c, d) {
+                var s = 1.70158;
+                return c*((t=t/d-1)*t*((s+1)*t + s) + 1) + b;
+            }
+            easeOutBounce (t, b, c, d) {
+                if ((t/=d) < (1/2.75)) {
+                    return c*(7.5625*t*t) + b;
+                } else if (t < (2/2.75)) {
+                    return c*(7.5625*(t-=(1.5/2.75))*t + .75) + b;
+                } else if (t < (2.5/2.75)) {
+                    return c*(7.5625*(t-=(2.25/2.75))*t + .9375) + b;
+                } else {
+                    return c*(7.5625*(t-=(2.625/2.75))*t + .984375) + b;
                 }
             }
-            amount = particles.length;
             
-        }
-
-        function onMouseClick(){
-            radius++;
-            if(radius === 3){
-                radius = 0;
+            move (tick) {
+                if(this.x !== this.destX) {
+                this.x = this[settings.easing](
+                    tick, 
+                    this.startX, 
+                    this.destX - this.startX, 
+                    settings.duration);
+                }
+                if(this.y !== this.destY) {
+                this.y = this[settings.easing](
+                    tick, 
+                    this.startY, 
+                    this.destY - this.startY, 
+                    settings.duration);
+                }
             }
         }
 
-        function render(a) {
-            requestAnimationFrame(render);
-            ctx.clearRect(0, 0, ww, wh);
-            for (var i = 0; i < amount; i++) {
-                particles[i].render();
+        class Writer {
+            constructor (canvasId) {
+                let canvas = document.getElementById(canvasId);
+                this.ctx = canvas.getContext("2d");
+                this.w = canvas.width = 900;
+                this.h = canvas.height = 300;
+                // A list of all the particles that forms the text 
+                this.particles = [];
+                this.tick = 0;
+                let self = this
+                // My hope is that this will force the font to 
+                // be loaded before we try to draw text.
+                // Should be synchronous fetch but sometimes
+                // the default font is used instead! W00t?!
+                WebFont.load({
+                    active: function () {
+                        self.init(settings.text, settings.textSize)
+                    },
+                    google: {
+                        families: [settings.font]
+                    }
+                });
             }
-        };
 
-        window.addEventListener("resize", function(){initScene(this.text)}.bind(this), true);
-        document.getElementById('scene').addEventListener("mousemove", onMouseMove);
-        document.getElementById('scene').addEventListener("mouseleave", onTouchEnd);
-        document.getElementById('scene').addEventListener("touchmove", onTouchMove);
-        document.getElementById('scene').addEventListener("click", onMouseClick);
-        document.getElementById('scene').addEventListener("touchend", onTouchEnd);
-        setTimeout(function(){
-            initScene(this.text);
-            requestAnimationFrame(render);
-        }.bind(this), 100)
+            init (text, size) {
+                this.ctx.fillStyle = "#15398B"
+                this.ctx.shadowColor = "#445"
+                this.ctx.shadowOffsetX = 3;
+                this.ctx.shadowOffsetY = 5;
+                this.ctx.shadowBlur = 5;
+                this.ctx.font = size +'px '+settings.font.split(':')[0];
+                // Draw text on the canvas temporarily
+                var textWidth = this.ctx.measureText(text).width;
+                var startX = (this.w - textWidth) * 0.5;
+                var startY = (this.h - size) * 0.25;
+                this.ctx.fillText(text, 0, size);
+
+                var image = this.ctx.getImageData(0, 0, this.w, this.h);
+                var buffer32 = new Uint32Array(image.data.buffer);
+                for(var x = 0; x < this.w; x++) {
+                for(var y = 0; y < this.h; y++) {
+                    // The buffer is linear, y*w+x is a trick
+                    // to calculate the linear index.
+                    var color = buffer32[y * this.w + x];
+                    if (color) {
+                    // There is a pixel here, add a particle
+                    this.particles.push(new Particle(
+                        startX + x, 
+                        startY + y, 
+                        Math.round(Math.random()*this.w), 
+                        Math.round(Math.random()*this.h), 
+                        color));
+                    }
+                }
+                }
+                this.ctx.clearRect(0, 0, this.w, this.h);
+            }
+            
+            draw() {
+                // Start every frame with an empty image
+                var imageData = this.ctx.createImageData(this.w, this.h);
+                var pixels = new Uint32Array(imageData.data.buffer);
+
+                this.particles.forEach((p) => {
+                var x = Math.round(p.x);
+                var y = Math.round(p.y);
+                if(x >= 0 && x < this.w && y >= 0 && y < this.h) {
+                    pixels[x + this.w*y] = p.color;
+                }
+                if(this.tick > settings.startDelay) {
+                    p.move(this.tick - settings.startDelay);
+                }
+                });
+                
+                this.ctx.putImageData(imageData, 0, 0);
+                this.tick++;
+                requestAnimationFrame(() => this.draw());
+            }
+        }
+        
+        let writer = new Writer("canvas");
+        writer.draw();
     },
 }
 </script>

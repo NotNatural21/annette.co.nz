@@ -1,6 +1,6 @@
 <template>
     <div class="page">
-        <ReactiveParticle :text="'Annette Scott'" />
+        <ReactiveParticle :text="'Annette'" />
     </div>
 </template>
 
