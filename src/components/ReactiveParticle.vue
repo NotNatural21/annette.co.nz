@@ -11,8 +11,8 @@ export default {
     },
 	mounted(){
         let settings = {
-            startDelay: 30,
-            duration: 180,
+            startDelay: 1,
+            duration: 175,
             text: this.text,
             font: 'Montserrat',
             textSize: 150,
