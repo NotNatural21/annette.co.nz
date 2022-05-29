@@ -22,6 +22,9 @@ export default {
 </script>
 
 <style scoped>
+a{
+    cursor: pointer;
+}
 .tile {
     display: block;
     min-width: 250px;

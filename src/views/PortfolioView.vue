@@ -34,7 +34,6 @@ export default {
         }
     },
     mounted(){
-        console.log('tile_data:', this.tile_data)
     },
     methods: {
         

@@ -262,17 +262,6 @@ html, body {
   margin: 0 auto;
 }
 
-.box .box__description .box__description-container .box__description-title {
-  font-size: 24px;
-  letter-spacing: .5px;
-}
-
-.box .box__description .box__description-container .box__description-text {
-  color: #8C8AA7;
-  line-height: 20px;
-  margin-top: 20px;
-}
-
 .box .box__description .box__button {
   display: block;
   position: relative;
