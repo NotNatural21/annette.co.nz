@@ -88,15 +88,15 @@ export default {
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            ctx.font = "bold "+ (wh / 1) + "px sans-serif";
+            ctx.font = "bold "+ (Math.max((ww / 12), 60)) + "px sans-serif";
             ctx.textAlign = "center";
-            ctx.fillText(text , ww/2, wh/1.2);
+            ctx.fillText(text , ww/2, wh);
 
             let data  = ctx.getImageData(0, 0, ww, wh).data;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.globalCompositeOperation = "screen";
 
-            let numPart = Math.max(((canvas.width * canvas.height) / 1000), 175)
+            let numPart = Math.min(Math.max(((canvas.width * canvas.height) / 350), 140), 550)
             particles = [];
             for(let i = 0; i < ww; i += Math.round(ww / numPart)){
                 for(let j = 0; j < wh; j += Math.round(ww / numPart)){
