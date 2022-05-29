@@ -16,9 +16,10 @@ export default {
             mouse = {x:0,y:0},
             radius = 1;
 
-
-        let ww = canvas.width = document.getElementById('scene').clientWidth;
-        let wh = canvas.height = document.getElementById('scene').clientHeight;
+        let ww = document.getElementById('scene').clientWidth;
+        let wh = document.getElementById('scene').clientHeight;
+        canvas.width = ww;
+        canvas.height = wh;
 
         function Particle(x,y){
             this.x = x;
@@ -83,20 +84,22 @@ export default {
         }
 
         function initScene(text){
-            ww = canvas.width = document.getElementById('scene').clientWidth;
-            wh = canvas.height = document.getElementById('scene').clientHeight;
+            let ww = document.getElementById('scene').clientWidth;
+            let wh = document.getElementById('scene').clientHeight;
+            canvas.width = ww;
+            canvas.height = wh;
 
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
 
             ctx.font = "bold "+ (Math.max((ww / 12), 60)) + "px sans-serif";
             ctx.textAlign = "center";
             ctx.fillText(text , ww/2, wh);
 
             let data  = ctx.getImageData(0, 0, ww, wh).data;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.clearRect(0, 0, ww, wh);
             ctx.globalCompositeOperation = "screen";
 
-            let numPart = Math.min(Math.max(((canvas.width * canvas.height) / 350), 140), 550)
+            let numPart = Math.min(Math.max(((ww * wh) / 350), 140), 550)
             particles = [];
             for(let i = 0; i < ww; i += Math.round(ww / numPart)){
                 for(let j = 0; j < wh; j += Math.round(ww / numPart)){
@@ -106,6 +109,7 @@ export default {
                 }
             }
             amount = particles.length;
+            
         }
 
         function onMouseClick(){
@@ -117,7 +121,7 @@ export default {
 
         function render(a) {
             requestAnimationFrame(render);
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.clearRect(0, 0, ww, wh);
             for (var i = 0; i < amount; i++) {
                 particles[i].render();
             }
@@ -129,8 +133,10 @@ export default {
         document.getElementById('scene').addEventListener("touchmove", onTouchMove);
         document.getElementById('scene').addEventListener("click", onMouseClick);
         document.getElementById('scene').addEventListener("touchend", onTouchEnd);
-        initScene(this.text);
-        requestAnimationFrame(render);
+        setTimeout(function(){
+            initScene(this.text);
+            requestAnimationFrame(render);
+        }.bind(this), 100)
     },
 }
 </script>
