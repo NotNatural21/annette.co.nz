@@ -21,25 +21,25 @@ export default {
         let wh = canvas.height = document.getElementById('scene').clientHeight;
 
         function Particle(x,y){
-            this.x =  Math.random() * ww;
-            this.y =  Math.random() * wh;
+            this.x = x;
+            this.y =  0;
             this.dest = {
                 x : x,
                 y: y
             };
-            this.r =  1.5;
+            this.r =  2;
             this.vx = (Math.random() - 0.5) * 20;
             this.vy = (Math.random() - 0.5) * 20;
             this.accX = 0;
             this.accY = 0;
-            this.friction = Math.random() * 0.05 + 0.9;
+            this.friction = Math.random() * 0.05 + 0.87;
 
-            this.color = '#000000';
+            this.color = '#19409b';
         }
 
         Particle.prototype.render = function() {
-            this.accX = (this.dest.x - this.x) / 400;
-            this.accY = (this.dest.y - this.y) / 400;
+            this.accX = (this.dest.x - this.x) / 200;
+            this.accY = (this.dest.y - this.y) / 200;
             this.vx += this.accX;
             this.vy += this.accY;
             this.vx *= this.friction;
@@ -96,7 +96,8 @@ export default {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.globalCompositeOperation = "screen";
 
-            let numPart = 450
+            let numPart = Math.max(((canvas.width * canvas.height) / 1000), 175)
+            console.log(numPart)
             particles = [];
             for(let i = 0; i < ww; i += Math.round(ww / numPart)){
                 for(let j = 0; j < wh; j += Math.round(ww / numPart)){

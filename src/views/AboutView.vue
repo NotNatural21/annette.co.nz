@@ -1,12 +1,30 @@
 <template>
-  <div class="page">
-    <h1>This is an about page</h1>
-  </div>
+    <div class="page">
+        <ReactiveParticle :text="'About'" />
+    </div>
 </template>
 
 <script>
+import ReactiveParticle from '../components/ReactiveParticle.vue'
+export default {
+    name: 'AboutView',
+    components: {
+        ReactiveParticle
+    },
+    data() {
+        return{
 
+        }
+    },
+    mounted(){
+
+    },
+    methods: {
+        
+    }
+};
 </script>
 
 <style scoped>
+
 </style>
