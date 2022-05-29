@@ -70,7 +70,7 @@ export default {
     width : 60px;
     min-width : 60px;
     height: 100vh;
-    background-color: #15398B;
+    background-color: var(--color-primary);
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -102,10 +102,13 @@ export default {
 }
 
 #nav > a:hover{
-    background-color: #19409b;
+    background-color: var(--color-primary-highlight);
 }
 
 .page{
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
     width: calc(100% - 60px);
     height: 100vh;
     margin-left: auto;
@@ -129,5 +132,25 @@ export default {
     transform: rotate(180deg);
 }
 
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
 
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px #0006; 
+  border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #15398B; 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #112d6e; 
+}
 </style>

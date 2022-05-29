@@ -88,16 +88,15 @@ export default {
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            ctx.font = "bold "+ (ww / 10) + "px sans-serif";
+            ctx.font = "bold "+ (wh / 1) + "px sans-serif";
             ctx.textAlign = "center";
-            ctx.fillText(text , ww/2, wh/2);
+            ctx.fillText(text , ww/2, wh/1.2);
 
             let data  = ctx.getImageData(0, 0, ww, wh).data;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.globalCompositeOperation = "screen";
 
             let numPart = Math.max(((canvas.width * canvas.height) / 1000), 175)
-            console.log(numPart)
             particles = [];
             for(let i = 0; i < ww; i += Math.round(ww / numPart)){
                 for(let j = 0; j < wh; j += Math.round(ww / numPart)){
@@ -126,6 +125,7 @@ export default {
 
         window.addEventListener("resize", function(){initScene(this.text)}.bind(this), true);
         document.getElementById('scene').addEventListener("mousemove", onMouseMove);
+        document.getElementById('scene').addEventListener("mouseleave", onTouchEnd);
         document.getElementById('scene').addEventListener("touchmove", onTouchMove);
         document.getElementById('scene').addEventListener("click", onMouseClick);
         document.getElementById('scene').addEventListener("touchend", onTouchEnd);
@@ -138,6 +138,6 @@ export default {
 <style scoped>
 canvas{
     width: 100%;
-    height: 300px;
+    height: clamp(100px, 15%, 300px);
 }
 </style>
