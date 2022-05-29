@@ -1,0 +1,1 @@
+import{_ as t,R as o,f as a,o as c,c as s,d as n}from"./index.51c4424e.js";const r={name:"AboutView",components:{ReactiveParticle:o},data(){return{}},mounted(){},methods:{}},i={class:"page"};function _(p,d,m,l,u,f){const e=a("ReactiveParticle");return c(),s("div",i,[n(e,{text:"About"})])}var x=t(r,[["render",_]]);export{x as default};
